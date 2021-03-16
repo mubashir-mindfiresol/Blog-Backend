@@ -22,13 +22,16 @@ public class Mysecurityconfig extends WebSecurityConfigurerAdapter{
 	private CustomUserDetailService customUserDetailService;
 	@Autowired
 	private JwtAuthenticationFilter jwtFilter;
+	@Autowired
+	private JwtAuthenticationEntryPoint entryPoint;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors().disable().authorizeRequests().antMatchers("/token")
 		.permitAll()
 		.anyRequest().authenticated()
 		.and()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().exceptionHandling().authenticationEntryPoint(entryPoint);
 		http.addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
 	}
 
